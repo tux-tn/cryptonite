@@ -52,10 +52,12 @@ $(function() {
         });
     }
     chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
-    darkwire.updateUsername(username).then((socketData) => {
-      chat.chatPage.show();
-      chat.inputMessage.focus();
-      socket.emit('add user', socketData);
+    darkwire.createUser(username).then((user) => {
+      darkwire.encode(user).then((socketData) => {
+        chat.chatPage.show();
+        chat.inputMessage.focus();
+        socket.emit('add:user', socketData);
+      });
     });
   }
 
@@ -86,23 +88,25 @@ $(function() {
   });
 
   // Whenever the server emits 'login', log the login message
-  socket.on('user joined', function(data) {
-    darkwire.connected = true;
-    addParticipantsMessage(data);
-    let importKeysPromises = darkwire.addUser(data);
-    Promise.all(importKeysPromises).then(() => {
-      // All users' keys have been imported
-      if (data.numUsers === 1) {
-        $('#first-modal').modal('show');
-      }
+  socket.on('user:joined', (data) => {
+    darkwire.decode(data).then((data) => {
+      darkwire.connected = true;
+      addParticipantsMessage(data);
+      let importKeysPromises = darkwire.addUser(data);
+      Promise.all(importKeysPromises).then(() => {
+        // All users' keys have been imported
+        if (data.numUsers === 1) {
+          $('#first-modal').modal('show');
+        }
 
-      chat.log(data.username + ' joined');
-      renderParticipantsList();
+        chat.log(data.username + ' joined');
+        renderParticipantsList();
+      });
     });
 
   });
 
-  socket.on('user update', (data) => {
+  socket.on('update:user', (data) => {
     darkwire.updateUser(data).then((oldUsername) => {
       chat.log(oldUsername + ' <span>changed name to</span> ' + data.username);
       renderParticipantsList();
@@ -208,7 +212,7 @@ $(function() {
     }
 
     // Prevent markup from being injected into the message
-    darkwire.encodeMessage(cleanedMessage, 'text').then((socketData) => {
+    darkwire.encode(cleanedMessage, 'text').then((socketData) => {
       message.val('');
       $('#send-message-btn').removeClass('active');
       // Add escaped message since message did not come from the server
@@ -260,7 +264,7 @@ $(function() {
         }
       }
 
-      darkwire.encodeMessage('Accepted <strong>' + file.additionalData.fileName + '</strong>', 'text').then((socketData) => {
+      darkwire.encode('Accepted <strong>' + file.additionalData.fileName + '</strong>', 'text').then((socketData) => {
         socket.emit('new message', socketData);
       }).catch((err) => {
         console.log(err);

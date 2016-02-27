@@ -187,7 +187,7 @@ export default class Chat {
             newUsername: socketData.username
           };
 
-          this.socket.emit('update user', modifiedSocketData);
+          this.socket.emit('user:update', modifiedSocketData);
           window.username = username = socketData.username;
         }).catch((err) => {
           return this.log(err, {error: true});

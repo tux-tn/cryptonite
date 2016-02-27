@@ -1,17 +1,17 @@
 import _ from 'underscore';
 import {EventEmitter} from 'events';
 import util from 'util';
-import uuid from 'uuid';
+import User from './js/user';
 
 class Room {
   constructor(io = {}, id = {}) {
     this._id = id;
-    this.numUsers = 0;
     this.users = [];
 
     EventEmitter.call(this);
 
     const thisIO = io.of(this._id);
+
     thisIO.on('connection', (socket) => {
       let addedUser = false;
 
@@ -21,34 +21,29 @@ class Room {
         socket.broadcast.emit('new message', {
           username: socket.username,
           id: socket.user.id,
-          message: data.message,
-          messageType: data.messageType,
-          data: data.data,
-          vector: data.vector,
+          payload: data.payload,
           secretKeys: data.secretKeys,
-          signature: data.signature,
-          timestamp: new Date()
+          signature: data.signature
         });
       });
 
-      socket.on('add user', (data) => {
+      socket.on('add:user', (data) => {
         if (addedUser) { return; }
 
-        data.id = uuid.v4();
+        console.log(data);
+
         this.users.push(data);
 
-        // we store the username in the socket session for this client
-        socket.username = data.username;
         socket.user = data;
-        ++this.numUsers;
         addedUser = true;
+        console.log('Adding user');
 
         // Broadcast to ALL sockets, including this one
-        thisIO.emit('user joined', {
-          username: socket.username,
-          numUsers: this.numUsers,
-          users: this.users,
-          timestamp: new Date()
+        thisIO.emit('user:joined', {
+          payload: data.payload,
+          secretKeys: data.secretKeys,
+          signature: data.signature,
+          vector: data.vector,
         });
       });
 
@@ -69,27 +64,25 @@ class Room {
       // when the user disconnects.. perform this
       socket.on('disconnect', () => {
         if (addedUser) {
-          --this.numUsers;
           this.users = _.without(this.users, socket.user);
 
           // echo globally that this client has left
           socket.broadcast.emit('user left', {
             username: socket.username,
-            numUsers: this.numUsers,
             users: this.users,
             id: socket.user.id,
             timestamp: new Date()
           });
 
           // remove room from rooms array
-          if (this.numUsers === 0) {
+          if (this.users.length === 0) {
             this.emit('empty');
           }
         }
       });
 
       // Update user
-      socket.on('update user', (data) => {
+      socket.on('user:update', (data) => {
         if (data.newUsername.length > 16) {
           return false;
         }
@@ -102,7 +95,8 @@ class Room {
           socket.username = user.username;
           socket.user = user;
 
-          thisIO.emit('user update', {
+          // prefix: update- emit to all
+          thisIO.emit('update:user', {
             username: socket.username,
             id: socket.user.id,
             timestamp: new Date()
