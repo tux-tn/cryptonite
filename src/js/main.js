@@ -76,16 +76,22 @@ $(function() {
   // Whenever the server emits 'login', log the login message
   socket.on('user:joined', (data) => {
     darkwire.decode(data).then((data) => {
+      // expected 1
+      data = data.length === 1 ? data[0] : false;
+      if (!data) {
+        return false;
+      }
       darkwire.connected = true;
-      addParticipantsMessage(data);
-      let importKeysPromises = darkwire.addUser(data);
+      addParticipantsMessage(data.user);
+      let importKeysPromises = darkwire.addUser(data.user);
       Promise.all(importKeysPromises).then(() => {
+        debugger;
         // All users' keys have been imported
-        if (data.numUsers === 1) {
+        if (importKeysPromises.length <= 1) {
           $('#first-modal').modal('show');
         }
 
-        chat.log(data.username + ' joined');
+        chat.log(data.user.username + ' joined');
         renderParticipantsList();
       });
     });

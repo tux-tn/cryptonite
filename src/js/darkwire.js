@@ -296,7 +296,7 @@ export default class Darkwire {
               })
               .then((data) => {
                 decryptedPayloadData = data;
-                decryptedPayload = new Parser(this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(decryptedPayloadData)));
+                decryptedPayload = this._cryptoUtil.convertArrayBufferViewToString(new Uint8Array(decryptedPayloadData));
                 return this._cryptoUtil.decryptSigningKey(signingKeyArrayBuffer, this._keys.private);
               })
               .then((data) => {
@@ -304,12 +304,11 @@ export default class Darkwire {
               })
               .then((data) => {
                 let signingKey = data;
-                debugger;
-                return this._cryptoUtil.verifyKey(signatureData, decryptedPayload, signingKey);
+                return this._cryptoUtil.verifyKey(signatureData, decryptedPayloadData, signingKey);
               })
               .then((bool) => {
                 if (bool) {
-                  return decryptedPayload;
+                  return new Parser(decryptedPayload);
                 }
               });
       };
