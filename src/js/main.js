@@ -37,7 +37,7 @@ $(function() {
     let message = '';
     let headerMsg = '';
 
-    $participants.text(data.numUsers);
+    $participants.text(darkwire.users.length);
   }
 
   // Sets the client's username
@@ -83,11 +83,8 @@ $(function() {
       }
       darkwire.connected = true;
       addParticipantsMessage(data.user);
-      let importKeysPromises = darkwire.addUser(data.user);
-      Promise.all(importKeysPromises).then(() => {
-        debugger;
-        // All users' keys have been imported
-        if (importKeysPromises.length <= 1) {
+      darkwire.addUser(data.user).then((users) => {
+        if (users.length <= 1) {
           $('#first-modal').modal('show');
         }
 

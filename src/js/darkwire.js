@@ -71,38 +71,24 @@ export default class Darkwire {
     });
   }
 
-  addUser(data) {
-    let importKeysPromises = [];
-    // Import all user keys if not already there
-    _.each(data.users, (user) => {
+  addUser(user) {
+    return new Promise((resolve, reject) => {
       if (!_.findWhere(this._users, {id: user.id})) {
-        let promise = new Promise((resolve, reject) => {
-          let currentUser = user;
-          Promise.all([
-            this._cryptoUtil.importPrimaryKey(currentUser.publicKey, 'spki')
-          ])
-          .then((keys) => {
-            this._users.push({
-              id: currentUser.id,
-              username: currentUser.username,
-              publicKey: keys[0]
-            });
-            resolve();
+        Promise.all([
+          this._cryptoUtil.importPrimaryKey(user.publicKey, 'spki')
+        ])
+        .then((keys) => {
+          this._users.push({
+            id: user.id,
+            username: user.username,
+            publicKey: keys[0]
           });
+          resolve(this._users);
         });
-
-        importKeysPromises.push(promise);
+      } else {
+        resolve(this._users);
       }
     });
-
-    if (!this._user) {
-      // Set my id if not already set
-      let me = _.findWhere(data.users, {username: username});
-      this._user = me;
-      debugger;
-    }
-
-    return importKeysPromises;
   }
 
   createUser(username) {
