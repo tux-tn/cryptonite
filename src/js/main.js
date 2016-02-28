@@ -13,7 +13,6 @@ $(function() {
   const darkwire = new Darkwire();
   const cryptoUtil = new CryptoUtil();
 
-  let $window = $(window);
   let $participants = $('#participants');
 
   let roomId = window.location.pathname.length ? window.location.pathname : null;
@@ -69,19 +68,6 @@ $(function() {
     return sanitized;
   }
 
-  // Keyboard events
-
-  $window.keydown(function(event) {
-    // When the client hits ENTER on their keyboard and chat message input is focused
-    if (event.which === 13 && !event.shiftKey && $('.inputMessage').is(':focus')) {
-      handleMessageSending();
-      socket.emit('stop typing');
-      chat.typing = false;
-      event.preventDefault();
-    }
-
-  });
-
   // Select message input when closing modal
   $('.modal').on('hidden.bs.modal', function(e) {
     chat.inputMessage.focus();
@@ -108,7 +94,10 @@ $(function() {
 
   socket.on('update:user', (data) => {
     darkwire.updateUser(data).then((oldUsername) => {
-      chat.log(oldUsername + ' <span>changed name to</span> ' + data.username);
+      chat.log(oldUsername + ' <span>changed name to</span> ' + data.username,
+        {
+          classNames: 'changed-name'
+        });
       renderParticipantsList();
     });
   });
@@ -202,7 +191,7 @@ $(function() {
     darkwire.audio.soundEnabled = state;
   });
 
-  function handleMessageSending() {
+  window.handleMessageSending = function() {
     let message = chat.inputMessage;
     let cleanedMessage = cleanInput(message.val());
     let slashCommand = chat.parseCommand(cleanedMessage);
@@ -224,7 +213,7 @@ $(function() {
     }).catch((err) => {
       console.log(err);
     });
-  }
+  };
 
   window.triggerFileTransfer = function(context) {
     const fileId = context.getAttribute('data-file');
