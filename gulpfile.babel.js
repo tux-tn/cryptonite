@@ -1,5 +1,8 @@
 import gulp from 'gulp';
 import uglify from 'gulp-uglify';
+import cssnano from 'gulp-cssnano';
+import rename from 'gulp-rename';
+import concat from 'gulp-concat';
 import nodemon from 'gulp-nodemon';
 import browserify from 'browserify';
 import babel from 'babelify';
@@ -32,15 +35,37 @@ gulp.task('dev', function() {
   .pipe(gulp.dest('src/public'));
 });
 
+gulp.task('scripts', function(){
+  return gulp.src(['bower_components/jquery/dist/jquery.min.js',
+                   'bower_components/favico.js/favico-0.3.10.min.js',
+                   'bower_components/bootstrap/dist/js/bootstrap.min.js',
+                   'bower_components/Autolinker.js/dist/Autolinker.min.js',
+                   'bower_components/Modernizr/modernizr.custom.js',
+                   'bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js',
+                   'bower_components/webcrypto-shim/webcrypto-shim.js',
+                   'bower_components/fastclick/lib/fastclick.js',
+                   'src/public/main.js'])
+  .pipe(concat('main.min.js'))
+  .pipe(uglify())
+  .pipe(gulp.dest('src/public'));
+});
+gulp.task('styles', function(){
+   return gulp.src(['bower_components/bootstrap/dist/css/bootstrap.min.css',
+                    'bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css',
+                    'src/public/style.css'])
+  .pipe(concat('style.min.css'))
+  .pipe(cssnano())
+  .pipe(gulp.dest('src/public'));
+})
 gulp.task('start', function() {
   nodemon({
     script: 'index.js',
     ext: 'css js mustache',
-    ignore: ['src/public/main.js', 'test'],
+    ignore: ['src/public/main.js','src/public/main.min.js','src/public/style.min.css', 'test'],
     env: {
       'NODE_ENV': 'development'
     },
-    tasks: ['dev']
+    tasks: ['dev','scripts','styles']
   });
 });
 
