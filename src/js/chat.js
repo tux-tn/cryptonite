@@ -84,12 +84,12 @@ export default class Chat {
   // Gets the color of a username through our hash function
   getUsernameColor(username) {
     const COLORS = [
-      '#e21400', '#ffe400', '#ff8f00',
-      '#58dc00', '#dd9cff', '#4ae8c4',
-      '#3b88eb', '#f47777', '#EEACB7',
-      '#D3FF3E', '#99CC33', '#999933',
-      '#996633', '#B8D5B8', '#7FFF38',
-      '#FADBBC', '#FAE2B7', '#EBE8AF',
+      '#1abc9c', '#27ae60', '#e74c3c',
+      '#2ecc71', '#2980b9', '#f39c12',
+      '#3498db', '#8e44ad', '#d35400',
+      '#9b59b6', '#2c3e50', '#c0392b',
+      '#34495e', '#f1c40f', '#bdc3c7',
+      '#16a085', '#e67e22', '#7f8c8d',
     ];
     // Compute hash code
     let hash = 7;
