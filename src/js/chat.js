@@ -109,10 +109,15 @@ export default class Chat {
         this.inputMessage.focus();
       }
     });
-
-    this.inputMessage.on('input propertychange paste change', function() {
+    // Handle all input events to update send
+    this.inputMessage.on('DOMAttrModified textInput input change keypress paste focus', function() {
       _this.updateTyping();
       let message = $(this).val().trim();
+      if ($("#tweet-input").hasClass("active")) {
+        let charCount = 140 - message.replace(/(?:https?|ftp):\/\/[\n\S]+/g, 'https://t.co/loremipsum').length;
+        console.log(charCount);
+        $("#char-count").text(charCount);
+      }
       if (message.length) {
         $('#send-message-btn').addClass('active');
       } else {

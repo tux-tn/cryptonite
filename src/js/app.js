@@ -137,6 +137,16 @@ export default class App {
       this._chat.typing = false;
     });
 
+    $("#tweet-input").click(() => {
+      $("#tweet-input").toggleClass("active");
+      if ($(this).hasClass("active")) {
+        let charCount = 140 - $('.inputMessage').val().trim().replace(/(?:https?|ftp):\/\/[\n\S]+/g, 'https://t.co/loremipsum').length;
+        $("#char-count").text(charCount);
+      } else {
+        $("#char-count").text("");
+      }
+    });
+
     $('.navbar-collapse ul li a').click(() => {
       $('.navbar-toggle:visible').click();
     });
