@@ -11,7 +11,7 @@ html {
 
 html, body, input, textarea {
   font-family:
-    "SourceCodePro-Regular",
+    "Inconsolata",
     "HelveticaNeue-Light",
     "Helvetica Neue Light",
     "Helvetica Neue",
@@ -23,7 +23,7 @@ html, body, input, textarea {
 
 h1, h2, h3, h4, h5, h6 {
   font-family:
-    "SourceCodePro-Regular",
+    "Inconsolata",
     "HelveticaNeue-Light",
     "Helvetica Neue Light",
     "Helvetica Neue",
@@ -50,19 +50,35 @@ html, body {
 img {
   max-width: 100%;
 }
-
 @font-face {
-  font-family: 'SourceCodePro-Regular';
-  src: url('fonts/SourceCodePro-Regular.eot?#iefix') format('embedded-opentype'),  url('fonts/SourceCodePro-Regular.woff') format('woff'), url('fonts/SourceCodePro-Regular.ttf')  format('truetype'), url('fonts/SourceCodePro-Regular.svg#SourceCodePro-Regular') format('svg');
-  font-weight: normal;
-  font-style: normal;
+    font-family: "FontAwesome";
+    src: url("fonts/fontawesome-webfont.eot"); /* IE9 */
+    src: url("fonts/fontawesome-webfont.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("fonts/fontawesome-webfont.woff") format("woff"), /* chrome, firefox */
+    url("fonts/fontawesome-webfont.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url("fonts/fontawesome-webfont.svg#FontAwesome") format("svg"); /* iOS 4.1- */
+    font-style: normal;
+    font-weight: normal;
 }
-
 @font-face {
-  font-family: 'SourceCodePro-Bold';
-  src: url('fonts/SourceCodePro-Bold.eot?#iefix') format('embedded-opentype'),  url('fonts/SourceCodePro-Bold.woff') format('woff'), url('fonts/SourceCodePro-Bold.ttf')  format('truetype'), url('fonts/SourceCodePro-Bold.svg#SourceCodePro-Bold') format('svg');
-  font-weight: normal;
-  font-style: normal;
+    font-family: "Inconsolata";
+    src: url("fonts/Inconsolata-Regular.eot"); /* IE9 */
+    src: url("fonts/Inconsolata-Regular.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("fonts/Inconsolata-Regular.woff") format("woff"), /* chrome, firefox */
+    url("fonts/Inconsolata-Regular.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url("fonts/Inconsolata-Regular.svg#Inconsolata") format("svg"); /* iOS 4.1- */
+    font-style: normal;
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Inconsolata";
+    src: url("fonts/Inconsolata-Bold.eot"); /* IE9 */
+    src: url("fonts/Inconsolata-Bold.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("fonts/Inconsolata-Bold.woff") format("woff"), /* chrome, firefox */
+    url("fonts/Inconsolata-Bold.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url("fonts/Inconsolata-Bold.svg#Inconsolata") format("svg"); /* iOS 4.1- */
+    font-style: normal;
+    font-weight: bold;
 }
 
 .modal-content {
@@ -84,14 +100,14 @@ a {
 
 /* Typography */
 .bold {
-  font-family: "SourceCodePro-Bold",
+  font-family: "Inconsolata",
     "HelveticaNeue-Light",
     "Helvetica Neue Light",
     "Helvetica Neue",
     Helvetica,
     Arial,
     "Lucida Grande",
-    sans-serif !important;  
+    sans-serif !important;
 }
 
 .italic {
@@ -213,7 +229,7 @@ textarea {
   right: 0;
   left: 0;
   bottom: 0;
-  width: 100%; 
+  width: 100%;
   padding-bottom: 10px;
   height: 60px;
 }
@@ -226,7 +242,7 @@ textarea {
   // height: 60px;
   outline: none;
   width: 100%;
-  padding: 10px 75px 10px 10px;
+  padding: 10px 115px 10px 10px;
   /*Fix for inner shadow on iOS*/
   -webkit-appearance: none;
   border-radius: 0px;
@@ -239,19 +255,26 @@ textarea {
   padding: 15px;
   cursor: pointer;
 }
-
+.chat #char-count{
+  width: 25px;
+  color: #fff;
+  position: fixed;
+  bottom: 0;
+  right: 75px;
+  text-align: center;
+}
 /*
 html.no-touchevents .chat #input-icons {
   display: none;
 }*/
 
-.chat #input-icons #send-message-btn, .chat #input-icons #send-file {
+.chat #input-icons #send-message-btn, .chat #input-icons #send-file, .chat #input-icons #tweet-input {
   font-size: 25px;
   opacity: 0.3;
   color: white;
 }
 
-.chat #input-icons #send-message-btn.active {
+.chat #input-icons #send-message-btn.active,.chat #input-icons #tweet-input.active,.chat #input-icons input:hover + #send-file, .chat #input-icons #tweet-input:hover {
   opacity: 1.0;
 }
 
@@ -306,7 +329,7 @@ html.no-touchevents .chat #input-icons {
   color: black !important;
 }
 
-.bootstrap-switch-handle-on.bootstrap-switch-primary {  
+.bootstrap-switch-handle-on.bootstrap-switch-primary {
   background: #2a9fd6 !important;
   border-color: #2a9fd6 !important;
 }
@@ -321,7 +344,7 @@ html.no-touchevents .chat #input-icons {
   font-size: 200px;
   direction: ltr;
   cursor: pointer;
-  width: 45px;
+  width: 25px;
 }
 
 .file-disclaimer {
