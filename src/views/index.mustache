@@ -35,8 +35,8 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a id="newRoom" href="#" target="_blank"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;New Room</a></li>
-            <li><a href="javascript:void(0)" id="settings-nav"><i class="fa fa-cog" aria-hidden="true"></i>&nbsp;Settings</a></li>
+            <li><a id="newRoom" href="#" target="_blank"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Nouveau groupe</a></li>
+            <li><a href="javascript:void(0)" id="settings-nav"><i class="fa fa-cog" aria-hidden="true"></i>&nbsp;Paramètres</a></li>
           </ul>
         </div>
       </div>
@@ -47,12 +47,11 @@
         <div class="chatArea">
           <ul class="messages">
             <li class="log">
-              <p>Welcome to darkwire.io - encrypted chat</p>
             </li>
           </ul>
         </div>
         <div class="inputContainer">
-          <textarea class="inputMessage" placeholder="Type here..."></textarea>
+          <textarea class="inputMessage" placeholder="Tapez ici..."></textarea>
           <span id="char-count"></span>
           <div id="input-icons">
             <i class="fa fa-twitter" id="tweet-input"></i>
@@ -68,21 +67,21 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">Settings</h4>
           </div>
           <div class="modal-body">
-            <h6>Invite People to This Room</h6>
+            <h6>Inviter des personnes à rejoindre ce groupe</h6>
             <p>
               <input type="text" class="form-control share-text" readonly>
             </p>
             <br>
-            <h6>Sound</h6>
+            <h6>Son</h6>
             <input type="checkbox" name="sound-enabled" class="form-control bs-switch sound-enabled" checked>
             <br>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default encryption-active" data-dismiss="modal">Fermer</button>
           </div>
         </div>
       </div>
@@ -91,14 +90,14 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Current Participants</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Participants actuels</h4>
           </div>
           <div class="modal-body">
             <ul class="users"></ul>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
           </div>
         </div>
       </div>
@@ -108,11 +107,11 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Browser Not Supported</h4>
+            <h4 class="modal-title">Navigateur non pris en charge</h4>
           </div>
           <div class="modal-body">
-            <p>Your browser does not support the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto" target="_blank">Crypto Web API</a>.</p>
-            <p>Try using the lastest version of Chrome, Firefox or Safari.</p>
+            <p>Votre navigateur n'utilise pas l'<a href="https://developer.mozilla.org/en-US/docs/Web/API/Crypto" target="_blank">API Web Crypto</a>.</p>
+            <p>Essayez d'utiliser la dernière version de Chrome, Firefox ou Safari.</p>
           </div>
         </div>
       </div>

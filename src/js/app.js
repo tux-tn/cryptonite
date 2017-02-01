@@ -3,6 +3,7 @@ import Darkwire from './darkwire';
 import WindowHandler from './window';
 import Chat from './chat';
 import moment from 'moment';
+import 'moment/locale/fr';
 import sanitizeHtml from 'sanitize-html';
 import uuid from 'uuid';
 import he from 'he';
@@ -55,7 +56,7 @@ export default class App {
       this.addParticipantsMessage(data);
       let importKeysPromises = this._darkwire.addUser(data);
       Promise.all(importKeysPromises).then(() => {
-        this._chat.log(data.username + ' joined');
+        this._chat.log(data.username + ' a rejoint le groupe');
         this.renderParticipantsList();
       });
 
@@ -63,7 +64,7 @@ export default class App {
 
     this._socket.on('user update', (data) => {
       this._darkwire.updateUser(data).then((oldUsername) => {
-        this._chat.log(oldUsername + ' <span>changed name to</span> ' + data.username,
+        this._chat.log(oldUsername + ' <span>a changé son nom en</span> ' + data.username,
           {
             classNames: 'changed-name'
           });
@@ -92,7 +93,7 @@ export default class App {
 
     // Whenever the server emits 'user left', log it in the chat body
     this._socket.on('user left', (data) => {
-      this._chat.log(data.username + ' left');
+      this._chat.log(data.username + ' a quitté le groupe');
       this.addParticipantsMessage(data);
       this._chat.removeChatTyping(data);
 
@@ -113,7 +114,7 @@ export default class App {
 
     this._socket.on('disconnect', (data) => {
       this._darkwire.connected = false;
-      this._chat.log('Disconnected from server, automatically reconnecting in 4 seconds.', {
+      this._chat.log('Déconnecté du serveur, reconnexion automatique dans 4 secondes...', {
         error: true,
       });
       this.retryConnection();
@@ -187,7 +188,7 @@ export default class App {
         return windowHandler.fileHandler.encodeFile(fileId);
       }
 
-      return this._chat.log('Requested file transfer is no longer valid. Please try again.', {error: true});
+      return this._chat.log('Le fichier demandé n\'est plus disponible. Veuillez réessayer.', {error: true});
     };
 
     window.triggerFileDestroy = (context) => {
@@ -196,7 +197,7 @@ export default class App {
         return windowHandler.fileHandler.destroyFile(fileId);
       }
 
-      return this._chat.log('Requested file transfer is no longer valid. Please try again.', {error: true});
+      return this._chat.log('Le fichier demandé n\'est plus disponible. Veuillez réessayer.', {error: true});
     };
 
     window.triggerFileDownload = (context) => {
@@ -214,12 +215,12 @@ export default class App {
             let downloadLink = document.createElement('a');
             downloadLink.href = url;
             downloadLink.target = '_blank';
-            downloadLink.innerHTML = 'Download ' + file.additionalData.fileName;
+            downloadLink.innerHTML = 'Télécharger ' + file.additionalData.fileName;
             this._chat.replaceMessage('#file-transfer-request-' + fileId, downloadLink);
           }
         }
 
-        this._darkwire.encodeMessage('Accepted <strong>' + file.additionalData.fileName + '</strong>', 'text').then((socketData) => {
+        this._darkwire.encodeMessage('a accepté <strong>' + file.additionalData.fileName + '</strong>', 'text').then((socketData) => {
           this._socket.emit('new message', socketData);
         }).catch((err) => {
           console.log(err);
@@ -255,10 +256,12 @@ export default class App {
     let fs = window.requestFileSystem || window.webkitRequestFileSystem;
     if (fs) {
       fs(window.TEMPORARY, 100, () => {
-        this._chat.log('Your browser is not in incognito mode!', {warning: true});
+        this._chat.log('Vous n\'utilisez pas la navigation privée', {warning: true});
       });
     }
-    this._chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
+    // Set moment.js to french locale
+    moment.locale('fr');
+    this._chat.log(moment().format('Do MMMM YYYY, h:mm:ss'), {info: true});
     $('#roomName').text(this._roomId);
     $('#chatNameModal').text(this._roomId);
 
@@ -294,7 +297,7 @@ export default class App {
       let li;
       if (user.username === window.username) {
         // User is me
-        li = $('<li class="yourself">' + user.username + ' <span class="you">(you)</span></li>').css('color', this._chat.getUsernameColor(user.username));
+        li = $('<li class="yourself">' + user.username + ' <span class="you">(Vous)</span></li>').css('color', this._chat.getUsernameColor(user.username));
       } else {
         li = $('<li>' + user.username + '</li>').css('color', this._chat.getUsernameColor(user.username));
       }

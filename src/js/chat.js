@@ -48,11 +48,11 @@ export default class Chat {
     }
 
     if (options && options.error) {
-      $el = $('<li class="log-error">').addClass(`log ${classNames}`).html('ERROR: ' + message);
+      $el = $('<li class="log-error">').addClass(`log ${classNames}`).html('Erreur: ' + message);
     } else if (options && options.warning)  {
-      $el = $('<li class="log-warning">').addClass(`log ${classNames}`).html('WARNING: ' + message);
+      $el = $('<li class="log-warning">').addClass(`log ${classNames}`).html('Attention: ' + message);
     } else if (options && options.notice) {
-      $el = $('<li class="log-info">').addClass(`log ${classNames}`).html('NOTICE: ' + message);
+      $el = $('<li class="log-info">').addClass(`log ${classNames}`).html('Notice: ' + message);
     }  else if (options && options.info) {
       $el = $('<li class="log-info">').addClass(`log ${classNames}`).html(message);
     } else {
@@ -188,19 +188,19 @@ export default class Chat {
         let newUsername = trigger.params[0] || false;
 
         if (newUsername.toString().length > 16) {
-          return this.log('Username cannot be greater than 16 characters.', {error: true});
+          return this.log('Les noms d\'utilisateur ne peuvent pas contenir plus de 16 caratères.', {error: true});
         }
 
         // Remove things that arent digits or chars
         newUsername = newUsername.replace(/[^A-Za-z0-9]/g, '-');
 
         if (!newUsername.match(/^[A-Z]/i)) {
-          return this.log('Username must start with a letter.', {error: true});
+          return this.log('Le nom d\'utilisateur doit commencer par une lettre.', {error: true});
         }
 
         if (!warned) {
           warned = true;
-          return this.log('Changing your username is currently in beta and your new username will be sent over the wire in plain text, unecrypted. This will be fixed in v2.0. If you really want to do this, type the command again.',
+          return this.log('Le nouveau nom d\'utilisateur doit être envoyé en clair, veuillez saisir la commande de nouveau pour confirmer.',
           {
             warning: true,
             classNames: 'change-username-warning'
@@ -221,7 +221,7 @@ export default class Chat {
       }
     }, {
       command: 'help',
-      description: 'Shows a list of commands.',
+      description: 'Affiche la liste des commandes.',
       paramaters: [],
       multiple: false,
       usage: '/help',
@@ -230,11 +230,11 @@ export default class Chat {
           return '/' + command;
         });
 
-        this.log('Valid commands: ' + validCommands.sort().join(', '), {notice: true});
+        this.log('Commandes valides: ' + validCommands.sort().join(', '), {notice: true});
       }
     }, {
       command: 'me',
-      description: 'Invoke virtual action',
+      description: 'Invoque une action virtuelle',
       paramaters: ['{action}'],
       multiple: true,
       usage: '/me {action}',
@@ -257,7 +257,7 @@ export default class Chat {
       }
     }, {
       command: 'clear',
-      description: 'Clears the chat screen',
+      description: 'Vide l\' écran',
       paramaters: [],
       multiple: true,
       usage: '/clear',
@@ -280,14 +280,14 @@ export default class Chat {
       expectedParams = commandToTrigger.paramaters.length;
       if (expectedParams && trigger.params.length > expectedParams || expectedParams && trigger.params.length < expectedParams) {
         if ((!commandToTrigger.multple && trigger.params.length < 1) || (trigger.params.length >= 1 && trigger.params[0] === '')) {
-          return this.log('Missing or too many paramater. Usage: ' + commandToTrigger.usage, {error: true});
+          return this.log('Nombre de paramètre incorrecte. Usage: ' + commandToTrigger.usage, {error: true});
         }
       }
 
       return commandToTrigger.action.call();
     }
 
-    this.log(trigger.command + ' is not a valid command. Type /help for a list of valid commands.', {error: true});
+    this.log(trigger.command + ' n\' est pas une commande valide. Tapez /help pour voir la liste des commandes.', {error: true});
     return false;
   }
 
