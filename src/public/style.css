@@ -189,7 +189,7 @@ textarea {
 }
 
 .log {
-  color: gray;
+  color: #9E9E9E;
   font-size: 70%;
   margin: 5px;
   text-align: center;
@@ -349,7 +349,7 @@ html.no-touchevents .chat #input-icons {
 
 .file-disclaimer {
   font-size: 10px;
-  color: red;
+  color: #d50000;
   line-height: 10px;
 }
 
@@ -358,34 +358,34 @@ html.no-touchevents .chat #input-icons {
 }
 
 .log-error {
-  color: #D8D638;
+  color: #d50000;
 }
 
 .log-info {
-  color: #FFF;
+  color: #111;
 }
 
 .log-warning {
-  color: #E0873E;
+  color: #FF5722;
 }
 
 .action {
   font-style: italic;
-  color: #00FF7F;
+  color: #00E676;
 }
 
 .timestamp {
   font-size: 13px;
-  color: #CCC;
+  color: #BDBDBD;
   font-weight: bold;
   font-style: italic;
   display: block;
 }
 
 .external-link:after {
-  content: 'External Link';
+  content: 'Lien externe:';
   color: #FFF;
-  background-color: red;
+  background-color: #f44336;
 }
 
 .room-name-top {
@@ -396,6 +396,6 @@ html.no-touchevents .chat #input-icons {
 
 .room-name-top p {
   margin: 0;
-  color: palegoldenrod;
+  color: #263238;
   font-weight: bold;
 }
