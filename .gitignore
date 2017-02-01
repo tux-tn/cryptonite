@@ -4,5 +4,6 @@ npm-debug.log
 src/public/main.js
 src/public/main.min.js
 src/public/style.min.css
+src/public/fonts
 src/.secret
 bower_components
