@@ -55,11 +55,6 @@ export default class App {
       this.addParticipantsMessage(data);
       let importKeysPromises = this._darkwire.addUser(data);
       Promise.all(importKeysPromises).then(() => {
-        // All users' keys have been imported
-        if (data.numUsers === 1) {
-          $('#first-modal').modal('show');
-        }
-
         this._chat.log(data.username + ' joined');
         this.renderParticipantsList();
       });
@@ -129,10 +124,6 @@ export default class App {
     // Nav links
     $('a#settings-nav').click(() => {
       $('#settings-modal').modal('show');
-    });
-
-    $('a#about-nav').click(() => {
-      $('#about-modal').modal('show');
     });
 
     $('.navbar .participants').click(() => {
@@ -257,9 +248,7 @@ export default class App {
         this._chat.log('Your browser is not in incognito mode!', {warning: true});
       });
     }
-
     this._chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
-    
     $('#roomName').text(this._roomId);
     $('#chatNameModal').text(this._roomId);
 
