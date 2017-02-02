@@ -337,12 +337,11 @@ export default class Chat {
       options.fade = false;
       $typingMessages.remove();
     }
-
+    let userBackground = this.getUsernameColor(data.username);
     let $usernameDiv = $('<span class="username"/>')
-      .text(data.username)
-      .css('color', this.getUsernameColor(data.username));
-
-    let $messageBodyDiv = $('<span class="messageBody">');
+      .text(data.username.substr(0,2))
+      .css('background', userBackground);
+    let $messageBodyDiv = $('<span class="messageBody"/>');
     let timestamp = this.getTimestamp(data.typing);
 
     if (messageType === 'text' || messageType === 'action') {
