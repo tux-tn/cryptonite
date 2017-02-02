@@ -346,7 +346,7 @@ export default class Chat {
 
     if (messageType === 'text' || messageType === 'action') {
       if (messageType === 'action') {
-        $usernameDiv.css('color','').prepend('*');
+        $usernameDiv.before('*');
       }
 
       let unescapedMessage = unescape(data.message);

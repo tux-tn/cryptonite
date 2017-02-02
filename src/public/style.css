@@ -417,3 +417,9 @@ html.no-touchevents .chat #input-icons {
   color: #263238;
   font-weight: bold;
 }
+
+body.darkmode, .darkmode .modal-content, .darkmode .inputMessage, .darkmode .navbar-default .navbar-nav>li>a,.navbar-default .navbar-text, .darkmode .room-name-top p, .darkmode .log, .darkmode .navbar-default, .darkmode .modal-header, .darkmode .modal-footer, .darkmode .chat #input-icons #send-file, .darkmode .chat #input-icons #send-message-btn, .darkmode .chat #input-icons #tweet-input, .darkmode .timestamp, #char-count {
+  color: #55ff55 !important;
+  background: #000 !important;
+  border-color:#282828 !important;
+}

@@ -159,6 +159,12 @@ export default class App {
       this._darkwire.audio.soundEnabled = state;
     });
 
+    let darkmodeSwitch = $('input.darkmode-enabled').bootstrapSwitch();
+
+    darkmodeSwitch.on('switchChange.bootstrapSwitch', (event, state) => {
+      $('body').toggleClass('darkmode');
+    });
+
     window.handleMessageSending = () => {
       let message = this._chat.inputMessage;
       let cleanedMessage = this.cleanInput(message.val());
