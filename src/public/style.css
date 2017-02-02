@@ -313,6 +313,13 @@ html.no-touchevents .chat #input-icons {
   font-weight: 400;
 }
 
+#participants-modal ul.users li .fingerprint{
+  font-size: 14px;
+  display: block;
+  color: #999 !important;
+  font-weight:normal;
+}
+
 .read-key {
   cursor: pointer;
 }

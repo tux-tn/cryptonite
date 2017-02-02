@@ -4,6 +4,7 @@ import WindowHandler from './window';
 import Chat from './chat';
 import moment from 'moment';
 import 'moment/locale/fr';
+import jsSHA from 'jssha/src/sha1.js';
 import sanitizeHtml from 'sanitize-html';
 import uuid from 'uuid';
 import he from 'he';
@@ -293,16 +294,24 @@ export default class App {
 
   renderParticipantsList() {
     $('#participants-modal ul.users').empty();
+    let li;
     _.each(this._darkwire.users, (user) => {
-      let li;
-      if (user.username === window.username) {
-        // User is me
-        li = $('<li class="yourself">' + user.username + ' <span class="you">(Vous)</span></li>').css('color', this._chat.getUsernameColor(user.username));
-      } else {
-        li = $('<li>' + user.username + '</li>').css('color', this._chat.getUsernameColor(user.username));
-      }
-      $('#participants-modal ul.users')
-        .append(li);
+      this._darkwire._cryptoUtil.exportKey(user.publicKey,'spki')
+      .then((keyData) => {
+        let hashObj = new jsSHA('SHA-1','HEX');
+        hashObj.update(this._darkwire._cryptoUtil.convertArrayBufferViewToHex(keyData));
+        let thehash = hashObj.getHash("HEX");
+        let fingerprint =  thehash.split(/([a-f0-9]{2})/,64).filter(String).join(':');
+        if (user.username === window.username) {
+          li = $('<li class="yourself">' + user.username + ' <span class="you">(Vous) <span class="fingerprint">'+fingerprint+'</span></span></li>').css('color', this._chat.getUsernameColor(user.username));
+        } else {
+          li = $('<li>' + user.username + ' <span class="fingerprint">'+fingerprint+'</span></li>').css('color', this._chat.getUsernameColor(user.username));
+        }
+        $('#participants-modal ul.users')
+          .append(li);
+        }).catch((err) => {
+        console.log(err);
+      });
     });
   }
 
