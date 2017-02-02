@@ -262,7 +262,7 @@ export default class App {
     }
     // Set moment.js to french locale
     moment.locale('fr');
-    this._chat.log(moment().format('Do MMMM YYYY, h:mm:ss'), {info: true});
+    this._chat.log(moment().format('Do MMMM YYYY, H:mm:ss'), {info: true});
     $('#roomName').text(this._roomId);
     $('#chatNameModal').text(this._roomId);
 

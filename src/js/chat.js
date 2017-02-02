@@ -149,7 +149,7 @@ export default class Chat {
 
   addChatTyping(data) {
     data.typing = true;
-    data.message = 'is typing';
+    data.message = 'est entrain d\'écrire';
     this.addChatMessage(data);
   }
 
@@ -180,10 +180,10 @@ export default class Chat {
     let expectedParams = 0;
     const triggerCommands = [{
       command: 'nick',
-      description: 'Changes nickname.',
-      paramaters: ['{username}'],
+      description: 'Change le nom d\'utilisateur.',
+      paramaters: ['{nickname}'],
       multiple: false,
-      usage: '/nick {username}',
+      usage: '/nick {nickname}',
       action: () => {
 
         let newUsername = trigger.params[0] || false;
