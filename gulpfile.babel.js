@@ -36,7 +36,7 @@ gulp.task('dev', function () {
         .pipe(gulp.dest('src/public'));
 });
 
-gulp.task('scripts', function () {
+gulp.task('scripts',['dev'], function () {
     return gulp.src(['bower_components/jquery/dist/jquery.min.js',
             'bower_components/favico.js/favico-0.3.10.min.js',
             'bower_components/bootstrap/dist/js/bootstrap.min.js',
@@ -74,7 +74,7 @@ gulp.task('start', function () {
         env: {
             'NODE_ENV': 'development'
         },
-        tasks: ['dev', 'scripts', 'styles', 'fonts']
+        tasks: ['scripts', 'styles', 'fonts']
     });
 });
 
