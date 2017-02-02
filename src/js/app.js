@@ -21,8 +21,8 @@ export default class App {
 
   stripName(name) {
     const chatName = name.replace('/','').toLowerCase().replace(/[^A-Za-z0-9]/g, '-');
-    if (chatName.length >= 50) {
-      const limitedChatName = chatName.substr(0, 50);
+    if (chatName.length >= 16) {
+      const limitedChatName = chatName.substr(0, 16);
       window.history.replaceState({}, limitedChatName, `/${limitedChatName}`);
       return `/${limitedChatName}`;
     }
