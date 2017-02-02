@@ -41,7 +41,6 @@ export default class FileHandler {
 
       // Support for only 1MB
       if (file.size > 1000000) {
-        console.log(file);
         this.chat.addChatMessage({
           username: username,
           message: 'La taille maximum de fichier autorisée est de 1Mio'
@@ -50,7 +49,7 @@ export default class FileHandler {
       }
       let fileId = uuid.v4();
 
-      let confirmMessage = '<span id="transfer-' + fileId + '" class="file-presend-prompt">Vous allez envoyer<strong>' + file.name + '</strong> à tous les participants dans ce chat. <a class="file-trigger-confirm" onclick="triggerFileTransfer(this);" data-file="' + fileId + '">Confirmer</a> | <a class="file-trigger-cancel" onclick="triggerFileDestroy(this)" data-file="' + fileId + '">Annuler</a></span>';
+      let confirmMessage = '<span id="transfer-' + fileId + '" class="file-presend-prompt">Vous allez envoyer <strong>' + file.name + '</strong> à tous les participants dans ce chat. <a class="file-trigger-confirm" onclick="triggerFileTransfer(this);" data-file="' + fileId + '">Confirmer</a> | <a class="file-trigger-cancel" onclick="triggerFileDestroy(this)" data-file="' + fileId + '">Annuler</a></span>';
       let fileData = {
         id: fileId,
         file: file

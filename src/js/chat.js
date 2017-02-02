@@ -2,6 +2,8 @@ import _ from 'underscore';
 import sanitizeHtml from 'sanitize-html';
 import he from 'he';
 import moment from 'moment';
+import 'moment/locale/fr';
+
 
 // TODO: Remove in v2.0
 let warned = false;
@@ -115,7 +117,6 @@ export default class Chat {
       let message = $(this).val().trim();
       if ($("#tweet-input").hasClass("active")) {
         let charCount = 140 - message.replace(/(?:https?|ftp):\/\/[\n\S]+/g, 'https://t.co/loremipsum').length;
-        console.log(charCount);
         $("#char-count").text(charCount);
       }
       if (message.length) {

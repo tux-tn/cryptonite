@@ -161,7 +161,7 @@ export default class Darkwire {
           // Someone else is using the username requested, allow reformatting
           // if it is owned by the user, else reject the promise
           if (userExists.id !== this._myUserId) {
-            return reject(username + ' is being used by someone else in this chat session.');
+            return reject(username + ' est déjà utilisé par un autre utilisateur dans ce groupe.');
           }
         }
 
