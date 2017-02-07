@@ -1,0 +1,22 @@
+{
+    "lang": "fr-FR",
+    "name": "Cryptonite",
+    "short_name": "Cryptonite",
+    "icons": [{
+            "src": "/android-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "version": "1.0.0",
+    "theme_color": "#312934",
+    "background_color": "#312934",
+    "start_url": "https://cryptonite.digitalkevlar.co",
+    "display": "standalone",
+    "orientation": "portrait"
+}
