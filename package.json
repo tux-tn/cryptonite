@@ -1,7 +1,7 @@
 {
-  "name": "darkwire",
-  "version": "1.5.8",
-  "description": "Encrypted web socket chat",
+  "name": "cryptonite",
+  "version": "1.0.0",
+  "description": "Ephemeral web socket chat with E2E encrypton, based on darkwire.io",
   "main": "index.js",
   "dependencies": {
     "babel": "^5.8.23",
@@ -42,6 +42,7 @@
     "gulp-fontmin": "^0.7.4",
     "gulp-nodemon": "^2.0.6",
     "gulp-rename": "^1.2.2",
+    "gulp-watch": "^4.3.11",
     "jscs": "^2.10.1",
     "jshint": "^2.9.1",
     "karma": "^0.13.21",
@@ -64,10 +65,10 @@
     "start": "node index.js",
     "prod": "npm run bundle && forever start -c \"npm start\" ./",
     "dev": "npm run bundle && gulp start",
-    "bundle": "gulp bundle",
+    "bundle": "gulp scripts styles fonts",
     "test": "npm run bundle && gulp test",
     "test-travis": "node_modules/mocha/bin/mocha test/unit/lint.js --compilers js:babel-core/register && node_modules/karma/bin/karma start --single-run && node_modules/nightwatch/bin/nightwatch --test test/acceptance/index.js --config test/acceptance/nightwatch.json -e chrome"
   },
-  "author": "Daniel Seripap",
+  "author": "Sarhan Aissi",
   "license": "MIT"
 }
