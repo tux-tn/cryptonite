@@ -418,6 +418,30 @@ html.no-touchevents .chat #input-icons {
   font-weight: bold;
 }
 
+.tweet {
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #e1e8ed;
+  border-radius: 4px;
+  padding:5px 10px;
+  color: #1c2022;
+  max-width:600px;
+  margin-left:-10px;
+}
+
+.tweet:after {
+  font-family: FontAwesome;
+  display:inline-block;
+  content: "\f099";
+  color: #2b7bb9;
+  float: right;
+  font-size:14px;
+}
+
+.tweet a{
+  color: #2b7bb9;
+}
+
 body.darkmode, .darkmode .modal-content,
 .darkmode .inputMessage,
 .darkmode .navbar-default .navbar-nav>li>a,
@@ -464,7 +488,27 @@ body.darkmode, .darkmode .modal-content,
   padding: 9px 8px 5px 8px;
 }
 
-.jumbotron a i{
+#random-group {
+  background: #2ecc71;
+  color: #fff;
+  padding:15px 10px;
+  font-size:48px;
+  text-decoration: none;
+  border-radius:4px;
+}
+
+#random-group i {
+  font-size:34px;
+}
+
+#random-group:hover,#random-group:active {
+  text-decoration: none;
+  border:1px solid #0b0b0b;
+  opacity: 0.95;
+  outline: none;
+}
+
+.jumbotron .form-group i{
   background: #2ecc71;
   color: #fff;
   padding: 4px 8px;
@@ -474,4 +518,8 @@ body.darkmode, .darkmode .modal-content,
   font-size:40px;
   border-radius: 0px 4px 4px 0px;
   box-sizing: border-box;
+}
+.tweet .timestamp {
+  background-color: #fff !important;
+  color: #1c2022 !important;
 }

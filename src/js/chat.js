@@ -265,6 +265,18 @@ export default class Chat {
       action: () => {
         this.clear();
       }
+    },{
+      command: 'join',
+      description: 'Rejoint un nouveau groupe de discussion',
+      paramaters: ['room'],
+      multiple: true,
+      usage: '/join {room}',
+      action: () => {
+        let newRoomId = trigger.params[0] || false;
+        const newWindow = window.open();
+        newWindow.opener = null;
+        newWindow.location = window.location.protocol + '//' + window.location.host + '/' + newRoomId;
+      }
     }];
 
     const color = () => {
@@ -329,7 +341,7 @@ export default class Chat {
     }
 
     let messageType = data.messageType || 'text';
-
+    let textTypes = ['action', 'text', 'tweet'];
     // Don't fade the message in if there is an 'X was typing'
     let $typingMessages = this.getTypingMessages(data);
     options = options || {};
@@ -344,11 +356,10 @@ export default class Chat {
     let $messageBodyDiv = $('<span class="messageBody"/>');
     let timestamp = this.getTimestamp(data.typing);
 
-    if (messageType === 'text' || messageType === 'action') {
+    if (textTypes.includes(messageType)) {
       if (messageType === 'action') {
         $usernameDiv.before('*');
       }
-
       let unescapedMessage = unescape(data.message);
       let lineBreaks = /&#x3C;br \/&#x3E;/g;
       unescapedMessage = unescapedMessage.replace(lineBreaks, '<br />');
@@ -356,14 +367,13 @@ export default class Chat {
     } else {
       $messageBodyDiv.html(this.darkwire.addFileToQueue(data));
     }
-
+    console.log(data);
     let typingClass = data.typing ? 'typing' : '';
-    let actionClass = data.messageType === 'action' ? 'action' : '';
-
+    let messageClass = data.messageType === 'action' ? 'action' : data.messageType === 'tweet' ? 'tweet' : '';
     let $messageDiv = $('<li class="message"/>')
       .data('username', data.username)
       .addClass(typingClass)
-      .addClass(actionClass)
+      .addClass(messageClass)
       .append(timestamp, $usernameDiv, $messageBodyDiv);
 
     this.addMessageElement($messageDiv, options);
