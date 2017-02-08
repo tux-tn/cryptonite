@@ -1,6 +1,6 @@
 {
   "name": "cryptonite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ephemeral web socket chat with E2E encrypton, based on darkwire.io",
   "main": "index.js",
   "dependencies": {
