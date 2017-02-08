@@ -71,6 +71,7 @@ export default class FileHandler {
     const file = fileData.file || false;
 
     if (file) {
+      this.localFileQueue = _.without(this.localFileQueue, file);
     } else {
       return false;
     }
