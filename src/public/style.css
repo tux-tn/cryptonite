@@ -418,8 +418,60 @@ html.no-touchevents .chat #input-icons {
   font-weight: bold;
 }
 
-body.darkmode, .darkmode .modal-content, .darkmode .inputMessage, .darkmode .navbar-default .navbar-nav>li>a,.navbar-default .navbar-text, .darkmode .room-name-top p, .darkmode .log, .darkmode .navbar-default, .darkmode .modal-header, .darkmode .modal-footer, .darkmode .chat #input-icons #send-file, .darkmode .chat #input-icons #send-message-btn, .darkmode .chat #input-icons #tweet-input, .darkmode .timestamp, #char-count {
-  color: #55ff55 !important;
-  background: #000 !important;
-  border-color:#282828 !important;
+body.darkmode, .darkmode .modal-content,
+.darkmode .inputMessage,
+.darkmode .navbar-default .navbar-nav>li>a,
+.navbar-default .navbar-text,
+.darkmode .room-name-top p, .darkmode .log,
+.darkmode .navbar-default,
+.darkmode .modal-header, .darkmode .modal-footer,
+.darkmode .chat #input-icons #send-file,
+.darkmode .chat #input-icons #send-message-btn,
+.darkmode .chat #input-icons #tweet-input,
+.darkmode .timestamp, #char-count,
+.darkmode .jumbotron {
+  color: #2ecc71 !important;
+  background: #312934 !important;
+  border-color:#222 !important;
+}
+
+.jumbotron,.logo-splash{
+  text-align:center;
+  margin:0 auto;
+  display:block,
+}
+.jumbotron .form-group {
+  margin-top:100px;
+}
+.jumbotron .log-error {
+  margin-top:20px;
+  font-size:16px;
+}
+.jumbotron input{
+  border-radius: 3px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  padding:  4px 20px 2px 20px;
+  width: 50%;
+  font-size: 40px;
+  height: 100%;
+  outline: none;
+  border: none;
+}
+
+.jumbotron a#submit i{
+  font-size:34px;
+  padding: 9px 8px 5px 8px;
+}
+
+.jumbotron a i{
+  background: #2ecc71;
+  color: #fff;
+  padding: 4px 8px;
+  outline: 0;
+  border: 0;
+  margin-left: -12px;
+  font-size:40px;
+  border-radius: 0px 4px 4px 0px;
+  box-sizing: border-box;
 }
