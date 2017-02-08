@@ -265,6 +265,18 @@ export default class Chat {
       action: () => {
         this.clear();
       }
+    },{
+      command: 'join',
+      description: 'Rejoint un nouveau groupe de discussion',
+      paramaters: ['room'],
+      multiple: true,
+      usage: '/join {room}',
+      action: () => {
+        let newRoomId = trigger.params[0] || false;
+        const newWindow = window.open();
+        newWindow.opener = null;
+        newWindow.location = window.location.protocol + '//' + window.location.host + '/' + newRoomId;
+      }
     }];
 
     const color = () => {
