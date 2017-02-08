@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cryptonite - Chat éphémère</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#312934">
+    <link rel="stylesheet" href="/style.min.css">
+</head>
+
+<body class="darkmode">
+<article class="container">
+<div class="row">
+  <div class="jumbotron">
+    <img src="/logo.png" class="logo-splash" />
+    <h1>Bienvenue sur Cryptonite</h1>
+    <p>Cryptonite est une application de Chat avec chiffrement de bout en bout.</p>
+    <p>
+      Veuillez entrer le nom du groupe pour continuer
+    </p>
+    <div class="form-group">
+      <input type="text" name="text" id="channel" />
+      <a href="javascript:void(0)" id="submit"><i class="fa fa-send-o" aria-hidden="true"></i></a>
+      <div class="log-error"></div>
+    </div>
+  </div>
+</div>
+</article>
+<script>
+var button = document.getElementById("submit");
+var input = document.getElementById("channel");
+function submitLogin(event) {
+  if ((event.type === "keypress" && (event.keyCode === 13 || event.which === 13)) || event.type === "click") {
+    window.location = input.value;
+  }
+}
+button.addEventListener("click", submitLogin);
+input.addEventListener("keypress",submitLogin);
+</script>
+</body>
+
+</html>

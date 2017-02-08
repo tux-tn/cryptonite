@@ -3,20 +3,35 @@ import Darkwire from './darkwire';
 import WindowHandler from './window';
 import Chat from './chat';
 import moment from 'moment';
+import 'moment/locale/fr';
+import jsSHA from 'jssha/src/sha1.js';
 import sanitizeHtml from 'sanitize-html';
+import uuid from 'uuid';
 import he from 'he';
 
 export default class App {
 
   constructor() {
-    this._roomId = window.location.pathname.length ? window.location.pathname : null;
+    this._roomId = window.location.pathname.length ? this.stripName(window.location.pathname) : null;
     this._darkwire = new Darkwire();
     this._socket = io(this._roomId);
-    this._chat = new Chat(this._darkwire, this._socket);
+    this._darkwire.connected = false;
     this.init();
   }
 
+  stripName(name) {
+    const chatName = name.replace('/','').toLowerCase().replace(/[^A-Za-z0-9]/g, '-');
+    if (chatName.length >= 16) {
+      const limitedChatName = chatName.substr(0, 16);
+      window.history.replaceState({}, limitedChatName, `/${limitedChatName}`);
+      return `/${limitedChatName}`;
+    }
+
+    return '/' + chatName;
+  }
+
   init() {
+    this._chat = new Chat(this._darkwire, this._socket);
 
     if (!this._roomId) { return; }
 
@@ -25,7 +40,6 @@ export default class App {
     $('input.share-text').click(() => {
       $(this).focus();
       $(this).select();
-      this.setSelectionRange(0, 9999);
     });
 
     const windowHandler = new WindowHandler(this._darkwire, this._socket, this._chat);
@@ -43,12 +57,7 @@ export default class App {
       this.addParticipantsMessage(data);
       let importKeysPromises = this._darkwire.addUser(data);
       Promise.all(importKeysPromises).then(() => {
-        // All users' keys have been imported
-        if (data.numUsers === 1) {
-          $('#first-modal').modal('show');
-        }
-
-        this._chat.log(data.username + ' joined');
+        this._chat.log(data.username + ' a rejoint le groupe');
         this.renderParticipantsList();
       });
 
@@ -56,7 +65,7 @@ export default class App {
 
     this._socket.on('user update', (data) => {
       this._darkwire.updateUser(data).then((oldUsername) => {
-        this._chat.log(oldUsername + ' <span>changed name to</span> ' + data.username,
+        this._chat.log(oldUsername + ' <span>a changé son nom en</span> ' + data.username,
           {
             classNames: 'changed-name'
           });
@@ -85,7 +94,7 @@ export default class App {
 
     // Whenever the server emits 'user left', log it in the chat body
     this._socket.on('user left', (data) => {
-      this._chat.log(data.username + ' left');
+      this._chat.log(data.username + ' a quitté le groupe');
       this.addParticipantsMessage(data);
       this._chat.removeChatTyping(data);
 
@@ -104,15 +113,19 @@ export default class App {
       this._chat.removeChatTyping(data);
     });
 
+    this._socket.on('disconnect', (data) => {
+      this._darkwire.connected = false;
+      this._chat.log('Déconnecté du serveur, reconnexion automatique dans 4 secondes...', {
+        error: true,
+      });
+      this.retryConnection();
+    });
+
     this.initChat();
 
     // Nav links
     $('a#settings-nav').click(() => {
       $('#settings-modal').modal('show');
-    });
-
-    $('a#about-nav').click(() => {
-      $('#about-modal').modal('show');
     });
 
     $('.navbar .participants').click(() => {
@@ -126,6 +139,16 @@ export default class App {
       this._chat.typing = false;
     });
 
+    $("#tweet-input").click(() => {
+      $("#tweet-input").toggleClass("active");
+      if ($(this).hasClass("active")) {
+        let charCount = 140 - $('.inputMessage').val().trim().replace(/(?:https?|ftp):\/\/[\n\S]+/g, 'https://t.co/loremipsum').length;
+        $("#char-count").text(charCount);
+      } else {
+        $("#char-count").text("");
+      }
+    });
+
     $('.navbar-collapse ul li a').click(() => {
       $('.navbar-toggle:visible').click();
     });
@@ -134,6 +157,12 @@ export default class App {
 
     audioSwitch.on('switchChange.bootstrapSwitch', (event, state) => {
       this._darkwire.audio.soundEnabled = state;
+    });
+
+    let darkmodeSwitch = $('input.darkmode-enabled').bootstrapSwitch();
+
+    darkmodeSwitch.on('switchChange.bootstrapSwitch', (event, state) => {
+      $('body').toggleClass('darkmode');
     });
 
     window.handleMessageSending = () => {
@@ -166,7 +195,7 @@ export default class App {
         return windowHandler.fileHandler.encodeFile(fileId);
       }
 
-      return this._chat.log('Requested file transfer is no longer valid. Please try again.', {error: true});
+      return this._chat.log('Le fichier demandé n\'est plus disponible. Veuillez réessayer.', {error: true});
     };
 
     window.triggerFileDestroy = (context) => {
@@ -175,7 +204,7 @@ export default class App {
         return windowHandler.fileHandler.destroyFile(fileId);
       }
 
-      return this._chat.log('Requested file transfer is no longer valid. Please try again.', {error: true});
+      return this._chat.log('Le fichier demandé n\'est plus disponible. Veuillez réessayer.', {error: true});
     };
 
     window.triggerFileDownload = (context) => {
@@ -193,12 +222,12 @@ export default class App {
             let downloadLink = document.createElement('a');
             downloadLink.href = url;
             downloadLink.target = '_blank';
-            downloadLink.innerHTML = 'Download ' + file.additionalData.fileName;
+            downloadLink.innerHTML = 'Télécharger ' + file.additionalData.fileName;
             this._chat.replaceMessage('#file-transfer-request-' + fileId, downloadLink);
           }
         }
 
-        this._darkwire.encodeMessage('Accepted <strong>' + file.additionalData.fileName + '</strong>', 'text').then((socketData) => {
+        this._darkwire.encodeMessage('a accepté <strong>' + file.additionalData.fileName + '</strong>', 'text').then((socketData) => {
           this._socket.emit('new message', socketData);
         }).catch((err) => {
           console.log(err);
@@ -234,38 +263,68 @@ export default class App {
     let fs = window.requestFileSystem || window.webkitRequestFileSystem;
     if (fs) {
       fs(window.TEMPORARY, 100, () => {
-        this._chat.log('Your browser is not in incognito mode!', {warning: true});
+        this._chat.log('Vous n\'utilisez pas la navigation privée', {warning: true});
       });
     }
+    // Set moment.js to french locale
+    moment.locale('fr');
+    this._chat.log(moment().format('Do MMMM YYYY, H:mm:ss'), {info: true});
+    $('#roomName').text(this._roomId);
+    $('#chatNameModal').text(this._roomId);
 
-    this._chat.log(moment().format('MMMM Do YYYY, h:mm:ss a'), {info: true});
     this._darkwire.updateUsername(username).then((socketData) => {
       this._chat.chatPage.show();
       this._chat.inputMessage.focus();
       this._socket.emit('add user', socketData);
+    });
+
+    $('#newRoom').on('click', (e) => {
+      e.preventDefault();
+      const newWindow = window.open();
+      newWindow.opener = null;
+      newWindow.location = window.location.protocol + '//' + window.location.host + '/' + uuid.v4().replace(/-/g,'');
     });
   }
 
   addParticipantsMessage(data) {
     let message = '';
     let headerMsg = '';
+    const {numUsers} = data;
 
-    $('#participants').text(data.numUsers);
+    if (numUsers === 0) {
+      window.location.reload();
+    }
+
+    $('#participants').text(numUsers);
   }
 
   renderParticipantsList() {
     $('#participants-modal ul.users').empty();
+    let li;
     _.each(this._darkwire.users, (user) => {
-      let li;
-      if (user.username === window.username) {
-        // User is me
-        li = $('<li class="yourself">' + user.username + ' <span class="you">(you)</span></li>').css('color', this._chat.getUsernameColor(user.username));
-      } else {
-        li = $('<li>' + user.username + '</li>').css('color', this._chat.getUsernameColor(user.username));
-      }
-      $('#participants-modal ul.users')
-        .append(li);
+      this._darkwire._cryptoUtil.exportKey(user.publicKey,'spki')
+      .then((keyData) => {
+        let hashObj = new jsSHA('SHA-1','HEX');
+        hashObj.update(this._darkwire._cryptoUtil.convertArrayBufferViewToHex(keyData));
+        let thehash = hashObj.getHash("HEX");
+        let fingerprint =  thehash.split(/([a-f0-9]{2})/,64).filter(String).join(':');
+        if (user.username === window.username) {
+          li = $('<li class="yourself">' + user.username + ' <span class="you">(Vous) <span class="fingerprint">'+fingerprint+'</span></span></li>').css('color', this._chat.getUsernameColor(user.username));
+        } else {
+          li = $('<li>' + user.username + ' <span class="fingerprint">'+fingerprint+'</span></li>').css('color', this._chat.getUsernameColor(user.username));
+        }
+        $('#participants-modal ul.users')
+          .append(li);
+        }).catch((err) => {
+        console.log(err);
+      });
     });
+  }
+
+  retryConnection() {
+    window.setTimeout(() => {
+      window.location.reload();
+    }, 4000);
   }
 
 }

@@ -2,6 +2,8 @@ import _ from 'underscore';
 import sanitizeHtml from 'sanitize-html';
 import he from 'he';
 import moment from 'moment';
+import 'moment/locale/fr';
+
 
 // TODO: Remove in v2.0
 let warned = false;
@@ -48,11 +50,11 @@ export default class Chat {
     }
 
     if (options && options.error) {
-      $el = $('<li class="log-error">').addClass(`log ${classNames}`).html('ERROR: ' + message);
+      $el = $('<li class="log-error">').addClass(`log ${classNames}`).html('Erreur: ' + message);
     } else if (options && options.warning)  {
-      $el = $('<li class="log-warning">').addClass(`log ${classNames}`).html('WARNING: ' + message);
+      $el = $('<li class="log-warning">').addClass(`log ${classNames}`).html('Attention: ' + message);
     } else if (options && options.notice) {
-      $el = $('<li class="log-info">').addClass(`log ${classNames}`).html('NOTICE: ' + message);
+      $el = $('<li class="log-info">').addClass(`log ${classNames}`).html('Notice: ' + message);
     }  else if (options && options.info) {
       $el = $('<li class="log-info">').addClass(`log ${classNames}`).html(message);
     } else {
@@ -84,12 +86,12 @@ export default class Chat {
   // Gets the color of a username through our hash function
   getUsernameColor(username) {
     const COLORS = [
-      '#e21400', '#ffe400', '#ff8f00',
-      '#58dc00', '#dd9cff', '#4ae8c4',
-      '#3b88eb', '#f47777', '#EEACB7',
-      '#D3FF3E', '#99CC33', '#999933',
-      '#996633', '#B8D5B8', '#7FFF38',
-      '#FADBBC', '#FAE2B7', '#EBE8AF',
+      '#1abc9c', '#27ae60', '#e74c3c',
+      '#2ecc71', '#2980b9', '#f39c12',
+      '#3498db', '#8e44ad', '#d35400',
+      '#9b59b6', '#2c3e50', '#c0392b',
+      '#34495e', '#f1c40f', '#bdc3c7',
+      '#16a085', '#e67e22', '#7f8c8d',
     ];
     // Compute hash code
     let hash = 7;
@@ -109,10 +111,14 @@ export default class Chat {
         this.inputMessage.focus();
       }
     });
-
-    this.inputMessage.on('input propertychange paste change', function() {
+    // Handle all input events to update send
+    this.inputMessage.on('DOMAttrModified textInput input change keypress paste focus', function() {
       _this.updateTyping();
       let message = $(this).val().trim();
+      if ($("#tweet-input").hasClass("active")) {
+        let charCount = 140 - message.replace(/(?:https?|ftp):\/\/[\n\S]+/g, 'https://t.co/loremipsum').length;
+        $("#char-count").text(charCount);
+      }
       if (message.length) {
         $('#send-message-btn').addClass('active');
       } else {
@@ -143,7 +149,7 @@ export default class Chat {
 
   addChatTyping(data) {
     data.typing = true;
-    data.message = 'is typing';
+    data.message = 'est entrain d\'écrire';
     this.addChatMessage(data);
   }
 
@@ -174,28 +180,28 @@ export default class Chat {
     let expectedParams = 0;
     const triggerCommands = [{
       command: 'nick',
-      description: 'Changes nickname.',
-      paramaters: ['{username}'],
+      description: 'Change le nom d\'utilisateur.',
+      paramaters: ['{nickname}'],
       multiple: false,
-      usage: '/nick {username}',
+      usage: '/nick {nickname}',
       action: () => {
 
         let newUsername = trigger.params[0] || false;
 
         if (newUsername.toString().length > 16) {
-          return this.log('Username cannot be greater than 16 characters.', {error: true});
+          return this.log('Les noms d\'utilisateur ne peuvent pas contenir plus de 16 caratères.', {error: true});
         }
 
         // Remove things that arent digits or chars
         newUsername = newUsername.replace(/[^A-Za-z0-9]/g, '-');
 
         if (!newUsername.match(/^[A-Z]/i)) {
-          return this.log('Username must start with a letter.', {error: true});
+          return this.log('Le nom d\'utilisateur doit commencer par une lettre.', {error: true});
         }
 
         if (!warned) {
           warned = true;
-          return this.log('Changing your username is currently in beta and your new username will be sent over the wire in plain text, unecrypted. This will be fixed in v2.0. If you really want to do this, type the command again.',
+          return this.log('Le nouveau nom d\'utilisateur doit être envoyé en clair, veuillez saisir la commande de nouveau pour confirmer.',
           {
             warning: true,
             classNames: 'change-username-warning'
@@ -216,7 +222,7 @@ export default class Chat {
       }
     }, {
       command: 'help',
-      description: 'Shows a list of commands.',
+      description: 'Affiche la liste des commandes.',
       paramaters: [],
       multiple: false,
       usage: '/help',
@@ -225,11 +231,11 @@ export default class Chat {
           return '/' + command;
         });
 
-        this.log('Valid commands: ' + validCommands.sort().join(', '), {notice: true});
+        this.log('Commandes valides: ' + validCommands.sort().join(', '), {notice: true});
       }
     }, {
       command: 'me',
-      description: 'Invoke virtual action',
+      description: 'Invoque une action virtuelle',
       paramaters: ['{action}'],
       multiple: true,
       usage: '/me {action}',
@@ -252,7 +258,7 @@ export default class Chat {
       }
     }, {
       command: 'clear',
-      description: 'Clears the chat screen',
+      description: 'Vide l\' écran',
       paramaters: [],
       multiple: true,
       usage: '/clear',
@@ -275,14 +281,14 @@ export default class Chat {
       expectedParams = commandToTrigger.paramaters.length;
       if (expectedParams && trigger.params.length > expectedParams || expectedParams && trigger.params.length < expectedParams) {
         if ((!commandToTrigger.multple && trigger.params.length < 1) || (trigger.params.length >= 1 && trigger.params[0] === '')) {
-          return this.log('Missing or too many paramater. Usage: ' + commandToTrigger.usage, {error: true});
+          return this.log('Nombre de paramètre incorrecte. Usage: ' + commandToTrigger.usage, {error: true});
         }
       }
 
       return commandToTrigger.action.call();
     }
 
-    this.log(trigger.command + ' is not a valid command. Type /help for a list of valid commands.', {error: true});
+    this.log(trigger.command + ' n\' est pas une commande valide. Tapez /help pour voir la liste des commandes.', {error: true});
     return false;
   }
 
@@ -331,17 +337,16 @@ export default class Chat {
       options.fade = false;
       $typingMessages.remove();
     }
-
+    let userBackground = this.getUsernameColor(data.username);
     let $usernameDiv = $('<span class="username"/>')
-      .text(data.username)
-      .css('color', this.getUsernameColor(data.username));
-
-    let $messageBodyDiv = $('<span class="messageBody">');
+      .text(data.username.substr(0,2))
+      .css('background', userBackground);
+    let $messageBodyDiv = $('<span class="messageBody"/>');
     let timestamp = this.getTimestamp(data.typing);
 
     if (messageType === 'text' || messageType === 'action') {
       if (messageType === 'action') {
-        $usernameDiv.css('color','').prepend('*');
+        $usernameDiv.before('*');
       }
 
       let unescapedMessage = unescape(data.message);

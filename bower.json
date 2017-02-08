@@ -1,0 +1,31 @@
+{
+  "name": "darkwire",
+  "description": "Encrypted web socket chat",
+  "main": "index.js",
+  "authors": [
+    "Daniel Seripap"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/tux-tn/darkwire.io",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webcrypto-shim": "^0.1.1",
+    "fastclick": "^1.0.6",
+    "autogrow": "^1.0.3",
+    "Autolinker.js": "^1.4.0",
+    "bootstrap-switch": "^3.3.2",
+    "underscore": "^1.8.3",
+    "Modernizr": "http://modernizr.com/download/?-touchevents-setclasses.zip",
+    "favico.js": "^0.3.10",
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.7.0",
+    "Inconsolata": "inconsolata#^0.0.1"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "config": {
+    "authHash": "DEFAULT_SHA256_HASH",
+    "port": 3000,
+    "cors": {
+      "origin": "http://localhost:3000",
+      "SuccessStatus": 200
+    },
+    "cookieConfig": {
+      "name": "session",
+      "maxAge": 267840000,
+      "secret": "DEFAULT_SECRET",
+      "cookie": {
+        "secureProxy" : true,
+        "httpOnly": true,
+        "maxAge" : 267840000,
+        "secure" : false,
+        "signed" : true
+      }
+    }
+  }
+}

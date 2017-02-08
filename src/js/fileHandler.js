@@ -25,26 +25,31 @@ export default class FileHandler {
   }
 
   confirmTransfer(event) {
-    const validFileTypes = ['png','jpg','jpeg','gif','zip','rar','gzip','pdf','txt','json','doc','docx'];
+    const validFileTypes = ['png','jpg','jpeg','gif','svg','zip','rar','gzip','pdf','txt','json','doc','docx','csv','xslx','xls','js','html','css','xml','mp4','webm','mp3'];
     const file = event.target.files && event.target.files[0];
 
     if (file) {
       const fileExt = file.name.split('.').pop().toLowerCase();
 
       if (validFileTypes.indexOf(fileExt) <= -1) {
-        alert('file type not supported');
+        this.chat.addChatMessage({
+          username: username,
+          message: 'Type de fichier non supporté.'
+        });
         return false;
       }
 
       // Support for only 1MB
-      if (file.size > 1000000) {
-        console.log(file);
-        alert('Max filesize is 1MB.');
+      if (file.size > 16777216) {
+        this.chat.addChatMessage({
+          username: username,
+          message: 'La taille maximum de fichier autorisée est de 16Mo'
+        });
         return false;
       }
       let fileId = uuid.v4();
 
-      let confirmMessage = '<span id="transfer-' + fileId + '" class="file-presend-prompt">You are about to send <strong>' + file.name + '</strong> to all participants in this chat. <a class="file-trigger-confirm" onclick="triggerFileTransfer(this);" data-file="' + fileId + '">Confirm</a> | <a class="file-trigger-cancel" onclick="triggerFileDestroy(this)" data-file="' + fileId + '">Cancel</a></span>';
+      let confirmMessage = '<span id="transfer-' + fileId + '" class="file-presend-prompt">Vous allez envoyer <strong>' + file.name + '</strong> à tous les participants dans ce chat. <a class="file-trigger-confirm" onclick="triggerFileTransfer(this);" data-file="' + fileId + '">Confirmer</a> | <a class="file-trigger-cancel" onclick="triggerFileDestroy(this)" data-file="' + fileId + '">Annuler</a></span>';
       let fileData = {
         id: fileId,
         file: file
@@ -66,7 +71,7 @@ export default class FileHandler {
     const file = fileData.file || false;
 
     if (file) {
-      // TODO: Remove file from local queue
+      this.localFileQueue = _.without(this.localFileQueue, file);
     } else {
       return false;
     }
@@ -81,7 +86,7 @@ export default class FileHandler {
         fileName: file.name
       };
       this.darkwire.encodeMessage(base64, fileType, additionalData).then((socketData) => {
-        this.chat.replaceMessage('#transfer-' + fileId, 'Sent <strong>' + file.name + '</strong>');
+        this.chat.replaceMessage('#transfer-' + fileId, 'a envoyé <strong>' + file.name + '</strong>');
         this.socket.emit('new message', socketData);
       });
       this.resetInput();
@@ -94,7 +99,7 @@ export default class FileHandler {
     const file = _.findWhere(this.localFileQueue, {id: fileId});
     this.localFileQueue = _.without(this.localFileQueue, file);
     this.resetInput();
-    return this.chat.replaceMessage('#transfer-' + fileId, 'The file transfer for <strong>' + file.file.name + '</strong> has been canceled.');
+    return this.chat.replaceMessage('#transfer-' + fileId, 'Le transfert de fichier pour <strong>' + file.file.name + '</strong> a été annulé.');
   }
 
   createBlob(base64, fileType) {
