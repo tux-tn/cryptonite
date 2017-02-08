@@ -15,6 +15,7 @@ import favicon from 'serve-favicon';
 import compression from 'compression';
 import fs from 'fs';
 import crypto from 'crypto';
+import uuid from 'uuid';
 import Room from './room';
 
 let usage = 0;
@@ -52,7 +53,7 @@ function generateNewRoom(req, res, id) {
 
 app.get('/', (req, res) => {
   if (req.session.isPopulated && req.session.loggedin === true) {
-    return res.render('selector');
+    return res.render('selector',{groupname: uuid.v4().replace(/-/g,'')});
   } else {
     return res.render('splash',{csrf: req.csrfToken()});
   }

@@ -23,6 +23,7 @@
     <p>
       Veuillez entrer le nom du groupe pour continuer
     </p>
+    <a href="javascript:void(0)" id="random-group">Nouveau groupe <i class="fa fa-random" aria-hidden="true"></i></a>
     <div class="form-group">
       <input type="text" name="text" id="channel" />
       <a href="javascript:void(0)" id="submit"><i class="fa fa-send-o" aria-hidden="true"></i></a>
@@ -32,6 +33,7 @@
 </div>
 </article>
 <script>
+var random = document.getElementById("random-group");
 var button = document.getElementById("submit");
 var input = document.getElementById("channel");
 function submitLogin(event) {
@@ -41,6 +43,13 @@ function submitLogin(event) {
 }
 button.addEventListener("click", submitLogin);
 input.addEventListener("keypress",submitLogin);
+random.addEventListener("click", function(event) {
+  event.preventDefault();
+  const newWindow = window.open();
+  const group = '{{groupname}}';
+  newWindow.opener = null;
+  newWindow.location = window.location.protocol + '//' + window.location.host + '/' + group;
+});
 </script>
 </body>
 

@@ -488,7 +488,27 @@ body.darkmode, .darkmode .modal-content,
   padding: 9px 8px 5px 8px;
 }
 
-.jumbotron a i{
+#random-group {
+  background: #2ecc71;
+  color: #fff;
+  padding:15px 10px;
+  font-size:48px;
+  text-decoration: none;
+  border-radius:4px;
+}
+
+#random-group i {
+  font-size:34px;
+}
+
+#random-group:hover,#random-group:active {
+  text-decoration: none;
+  border:1px solid #0b0b0b;
+  opacity: 0.95;
+  outline: none;
+}
+
+.jumbotron .form-group i{
   background: #2ecc71;
   color: #fff;
   padding: 4px 8px;
