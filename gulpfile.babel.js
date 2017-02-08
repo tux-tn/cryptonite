@@ -10,10 +10,11 @@ import babel from 'babelify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import childProcess from 'child_process';
+import watch from 'gulp-watch';
 
 let spawn = childProcess.spawn;
 
-gulp.task('bundle', function () {
+gulp.task('babel', function () {
     return browserify('src/js/main.js', {
             debug: true
         }).transform(babel.configure({
@@ -25,18 +26,8 @@ gulp.task('bundle', function () {
         .pipe(gulp.dest('src/public'));
 });
 
-gulp.task('dev', function () {
-    return browserify('src/js/main.js', {
-            debug: true
-        }).transform(babel.configure({
-            presets: ['es2015']
-        })).bundle()
-        .pipe(source('main.js'))
-        .pipe(buffer())
-        .pipe(gulp.dest('src/public'));
-});
 
-gulp.task('scripts',['dev'], function () {
+gulp.task('scripts', ['babel'], function () {
     return gulp.src(['bower_components/jquery/dist/jquery.min.js',
             'bower_components/favico.js/favico-0.3.10.min.js',
             'bower_components/bootstrap/dist/js/bootstrap.min.js',
@@ -61,23 +52,25 @@ gulp.task('styles', function () {
         .pipe(cssnano())
         .pipe(gulp.dest('src/public'));
 });
-gulp.task('fonts', function() {
-    gulp.src(['bower_components/Inconsolata/fonts/Regular/Inconsolata-Regular.ttf', 'bower_components/Inconsolata/fonts/Bold/Inconsolata-Bold.ttf','bower_components/font-awesome/fonts/fontawesome-webfont.ttf'])
+gulp.task('fonts', function () {
+    gulp.src(['bower_components/Inconsolata/fonts/Regular/Inconsolata-Regular.ttf', 'bower_components/Inconsolata/fonts/Bold/Inconsolata-Bold.ttf', 'bower_components/font-awesome/fonts/fontawesome-webfont.ttf'])
         .pipe(fontmin())
         .pipe(gulp.dest("src/public/fonts"));
 });
 gulp.task('start', function () {
     nodemon({
         script: 'index.js',
-        ext: 'css js mustache',
-        ignore: ['src/public/main.js', 'src/public/main.min.js', 'src/public/style.min.css', 'test','node_modules','bower_components', 'src/public/fonts'],
+        ext: 'js mustache',
+        ignore: ['src/public/main.js', 'src/public/main.min.js', 'test', 'node_modules', 'bower_components'],
         env: {
             'NODE_ENV': 'development'
-        },
-        tasks: ['scripts', 'styles', 'fonts']
-    });
+        }
+    }).on('start', ['watch']);
 });
-
+gulp.task('watch', function () {
+    gulp.watch('src/public/style.css', ['styles']);
+    gulp.watch('src/js/*.js', ['scripts']);
+});
 gulp.task('test', function () {
     let lintTest = spawn(
         'node_modules/mocha/bin/mocha', ['test/unit/lint.js', '--compilers', 'js:babel-core/register'], {
