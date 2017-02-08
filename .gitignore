@@ -7,3 +7,4 @@ src/public/style.min.css
 src/public/fonts
 src/.secret
 bower_components
+config
