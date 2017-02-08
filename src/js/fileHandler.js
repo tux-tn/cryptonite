@@ -25,7 +25,7 @@ export default class FileHandler {
   }
 
   confirmTransfer(event) {
-    const validFileTypes = ['png','jpg','jpeg','gif','zip','rar','gzip','pdf','txt','json','doc','docx','csv','js','html','css','xslx','csv'];
+    const validFileTypes = ['png','jpg','jpeg','gif','svg','zip','rar','gzip','pdf','txt','json','doc','docx','csv','xslx','xls','js','html','css','xml','mp4','webm','mp3'];
     const file = event.target.files && event.target.files[0];
 
     if (file) {
@@ -40,10 +40,10 @@ export default class FileHandler {
       }
 
       // Support for only 1MB
-      if (file.size > 1000000) {
+      if (file.size > 16777216) {
         this.chat.addChatMessage({
           username: username,
-          message: 'La taille maximum de fichier autorisée est de 1Mio'
+          message: 'La taille maximum de fichier autorisée est de 16Mo'
         });
         return false;
       }
@@ -71,7 +71,6 @@ export default class FileHandler {
     const file = fileData.file || false;
 
     if (file) {
-      // TODO: Remove file from local queue
     } else {
       return false;
     }
