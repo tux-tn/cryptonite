@@ -173,15 +173,19 @@ export default class App {
       if (slashCommand) {
         return this._chat.executeCommand(slashCommand, this);
       }
-
+      let type = "text";
+      if ($("#tweet-input").hasClass("active")) {
+        type = "tweet";
+      }
       // Prevent markup from being injected into the message
-      this._darkwire.encodeMessage(cleanedMessage, 'text').then((socketData) => {
+      this._darkwire.encodeMessage(cleanedMessage, type).then((socketData) => {
         message.val('');
         $('#send-message-btn').removeClass('active');
         // Add escaped message since message did not come from the server
         this._chat.addChatMessage({
           username: username,
-          message: escape(cleanedMessage)
+          message: escape(cleanedMessage),
+          messageType : type
         });
         this._socket.emit('new message', socketData);
       }).catch((err) => {
