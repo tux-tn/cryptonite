@@ -1,8 +1,8 @@
 export default class CryptoUtil {
   constructor() {
-    this._crypto = window.crypto || false;
-
-    if (!this._crypto || (!this._crypto.subtle && !this._crypto.webkitSubtle)) {
+    this._crypto = window.crypto || crypto || false;
+    console.log(this._crypto);
+    if (!this._crypto || !this._crypto.subtle) {
       $('#no-crypto').modal({
         backdrop: 'static',
         show: false,

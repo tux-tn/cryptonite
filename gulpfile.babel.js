@@ -34,7 +34,9 @@ gulp.task('scripts', ['babel'], function () {
             'bower_components/Autolinker.js/dist/Autolinker.min.js',
             'bower_components/Modernizr/modernizr.custom.js',
             'bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js',
-            'bower_components/webcrypto-shim/webcrypto-shim.js',
+            'node_modules/promise-js/promise.js',
+            'node_modules/asmcrypto.js/asmcrypto.js',
+            'node_modules/webcrypto-liner/dist/webcrypto-liner.shim.js',
             'bower_components/fastclick/lib/fastclick.js',
             'src/public/main.js'
         ])
